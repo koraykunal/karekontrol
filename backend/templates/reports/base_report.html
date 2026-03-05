@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <style>
+        @page {
+            size: A4;
+            margin: 1.8cm 2cm 2.5cm 2cm;
+
+            @bottom-center {
+                content: element(page-footer);
+            }
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            font-size: 9.5pt;
+            color: #1a1a2e;
+            line-height: 1.6;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+        .header-strip {
+            margin: -1.8cm -2cm 0 -2cm;
+        }
+        .header-strip table {
+            margin-bottom: 0;
+        }
+        .header-strip table td {
+            border: none;
+            padding: 0;
+            vertical-align: middle;
+        }
+        .header-top {
+            background-color: #0a0a0a;
+            padding: 14px 2cm 10px 2cm;
+        }
+        .header-bottom {
+            background-color: #1e1e2e;
+            padding: 10px 2cm 14px 2cm;
+        }
+        .brand-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 2px;
+        }
+        .brand-date {
+            font-size: 8pt;
+            color: #6b7280;
+            text-align: right;
+        }
+        .header-org-name {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #ffffff;
+        }
+        .header-meta {
+            font-size: 8.5pt;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        h1 {
+            font-size: 15pt;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 6px;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #1e293b;
+            border-left: 3px solid #2563EB;
+            padding-left: 10px;
+            margin-top: 22px;
+            margin-bottom: 12px;
+        }
+        h3 {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #334155;
+            margin-top: 14px;
+            margin-bottom: 8px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 14px;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: bold;
+            text-align: left;
+            padding: 7px 10px;
+            font-size: 8.5pt;
+            border-bottom: 2px solid #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 9pt;
+            vertical-align: top;
+        }
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .stat-grid {
+            margin-bottom: 18px;
+        }
+        .stat-grid table {
+            margin-bottom: 0;
+        }
+        .stat-grid td {
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 14px 8px;
+            background-color: #ffffff;
+        }
+        .stat-value {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #0f172a;
+            display: block;
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 7.5pt;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 7.5pt;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+        }
+        .badge-green { background-color: #dcfce7; color: #166534; }
+        .badge-red { background-color: #fee2e2; color: #991b1b; }
+        .badge-orange { background-color: #fff7ed; color: #9a3412; }
+        .badge-yellow { background-color: #fef9c3; color: #854d0e; }
+        .badge-gray { background-color: #f1f5f9; color: #475569; }
+        .badge-blue { background-color: #dbeafe; color: #1e40af; }
+        .badge-purple { background-color: #f3e8ff; color: #6b21a8; }
+
+        .text-muted { color: #64748b; font-size: 8.5pt; }
+        .text-success { color: #16a34a; }
+        .text-danger { color: #dc2626; }
+        .text-warning { color: #d97706; }
+        .text-primary { color: #2563EB; }
+
+        .info-card {
+            border: 1px solid #e2e8f0;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            background-color: #f8fafc;
+        }
+        .info-card table td {
+            border: none;
+            padding: 3px 10px;
+            font-size: 9pt;
+        }
+        .info-label {
+            color: #64748b;
+            font-size: 8.5pt;
+        }
+        .info-value {
+            font-weight: bold;
+            color: #1e293b;
+        }
+
+        .highlight-card {
+            border: 1.5px solid #2563EB;
+            padding: 14px 16px;
+            margin-bottom: 16px;
+            background-color: #eff6ff;
+        }
+
+        .chart-container {
+            text-align: center;
+            margin: 16px 0;
+        }
+        .chart-container img {
+            max-width: 100%;
+        }
+
+        .section-card {
+            border: 1px solid #e2e8f0;
+            padding: 12px 16px;
+            margin-bottom: 14px;
+            background-color: #ffffff;
+        }
+
+        .photo-grid {
+            margin-top: 8px;
+        }
+        .photo-grid td {
+            border: none;
+            padding: 4px;
+            vertical-align: top;
+        }
+        .photo-grid img {
+            max-width: 100%;
+            max-height: 180px;
+            border: 1px solid #e2e8f0;
+        }
+        .photo-label {
+            font-size: 7pt;
+            color: #94a3b8;
+            margin-top: 2px;
+        }
+
+        .dashboard-row {
+            margin-bottom: 14px;
+        }
+        .dashboard-row table td.dashboard-col-left {
+            border: none;
+            vertical-align: top;
+            padding: 0 8px 0 0;
+        }
+        .dashboard-row table td.dashboard-col-right {
+            border: none;
+            vertical-align: top;
+            padding: 0 0 0 8px;
+        }
+
+        .mini-stat {
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 10px 6px;
+            background-color: #ffffff;
+        }
+        .mini-stat-value {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #0f172a;
+            display: block;
+            line-height: 1.2;
+        }
+        .mini-stat-label {
+            font-size: 7pt;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .overdue-indicator {
+            display: inline-block;
+            padding: 1px 6px;
+            font-size: 7pt;
+            font-weight: bold;
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .resolved-indicator {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .photo-gallery-item {
+            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            background-color: #ffffff;
+        }
+        .photo-gallery-title {
+            font-size: 9pt;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+        .photo-gallery-meta {
+            font-size: 7.5pt;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .photo-gallery-grid td {
+            border: none;
+            padding: 3px;
+            vertical-align: top;
+        }
+        .photo-gallery-grid img {
+            max-width: 100%;
+            max-height: 160px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .compact-table th {
+            padding: 5px 8px;
+            font-size: 7.5pt;
+        }
+        .compact-table td {
+            padding: 4px 8px;
+            font-size: 8pt;
+        }
+
+        .days-open {
+            font-weight: bold;
+            font-size: 8.5pt;
+        }
+        .days-open-high { color: #dc2626; }
+        .days-open-medium { color: #d97706; }
+        .days-open-low { color: #16a34a; }
+
+        .entity-code {
+            font-size: 7.5pt;
+            color: #64748b;
+        }
+
+        .page-break { page-break-before: always; }
+        .no-break { page-break-inside: avoid; }
+
+        @page landscape {
+            size: A4 landscape;
+            margin: 1.8cm 2cm 2.5cm 2cm;
+
+            @bottom-center {
+                content: element(page-footer);
+            }
+        }
+        .landscape-page { page: landscape; }
+
+        /* WeasyPrint running footer */
+        #page-footer {
+            position: running(page-footer);
+            font-size: 7.5pt;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 8px;
+            width: 100%;
+        }
+        #page-footer table {
+            width: 100%;
+        }
+        #page-footer table td {
+            border: none;
+            padding: 0;
+            font-size: 7.5pt;
+            color: #94a3b8;
+        }
+        .page-number::before {
+            content: counter(page);
+        }
+        .page-count::before {
+            content: counter(pages);
+        }
+    </style>
+</head>
+<body>
+    <!-- Running footer: WeasyPrint places this in @bottom-center on every page -->
+    <div id="page-footer">
+        <table>
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    KareKontrol Y&#246;netim Sistemi Paneli
+                    <br/><span style="font-size: 6.5pt; color: #b0b8c4;">G&#252;&#231;l&#252; Y&#246;netim Dijital Kontrol</span>
+                </td>
+                <td style="width: 50%; text-align: right;"><span class="page-number"></span> / <span class="page-count"></span></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="header">
+        <div class="header-strip">
+            <div class="header-top">
+                <table>
+                    <tr>
+                        <td style="width: 50%;">
+                            <span class="brand-name" style="font-size: 11pt; letter-spacing: 0.5px;">{{ organization_name }}</span>
+                            <br/><span class="brand-date">{{ generation_date }}</span>
+                        </td>
+                        <td style="width: 50%; text-align: right;">
+                            <span class="brand-name">KAREKONTROL</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="header-bottom">
+                <div class="header-meta">{% block header_meta %}{% endblock %}</div>
+            </div>
+        </div>
+    </div>
+
+    {% block content %}{% endblock %}
+</body>
+</html>

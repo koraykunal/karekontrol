@@ -1,0 +1,1124 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="utf-8">
+    <title>KareKontrol - Mock Rapor Önizleme</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 1.8cm 2cm 2.5cm 2cm;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, 'Segoe UI', sans-serif;
+            font-size: 9.5pt;
+            color: #1a1a2e;
+            line-height: 1.6;
+            max-width: 210mm;
+            margin: 0 auto;
+            background: #e5e7eb;
+        }
+
+        .page {
+            background: #ffffff;
+            padding: 0;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            min-height: 297mm;
+            position: relative;
+            overflow: hidden;
+        }
+        .page-content {
+            padding: 0 2cm 2.5cm 2cm;
+        }
+
+        .header {
+            margin-bottom: 24px;
+        }
+        .header-top {
+            background-color: #0a0a0a;
+            padding: 14px 2cm 10px 2cm;
+        }
+        .header-top table {
+            margin-bottom: 0;
+        }
+        .header-top table td {
+            border: none;
+            padding: 0;
+            vertical-align: middle;
+        }
+        .header-bottom {
+            background-color: #1e1e2e;
+            padding: 10px 2cm 14px 2cm;
+        }
+        .brand-name {
+            font-size: 14pt;
+            font-weight: bold;
+            color: #ffffff;
+            letter-spacing: 2px;
+        }
+        .brand-date {
+            font-size: 8pt;
+            color: #6b7280;
+            text-align: right;
+        }
+        .header-meta {
+            font-size: 8.5pt;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        h1 {
+            font-size: 15pt;
+            font-weight: bold;
+            color: #0f172a;
+            margin-bottom: 6px;
+            margin-top: 0;
+        }
+        h2 {
+            font-size: 12pt;
+            font-weight: bold;
+            color: #1e293b;
+            border-left: 3px solid #2563EB;
+            padding-left: 10px;
+            margin-top: 22px;
+            margin-bottom: 12px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 14px;
+        }
+        th {
+            background-color: #f1f5f9;
+            color: #334155;
+            font-weight: bold;
+            text-align: left;
+            padding: 7px 10px;
+            font-size: 8.5pt;
+            border-bottom: 2px solid #cbd5e1;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        td {
+            padding: 6px 10px;
+            border-bottom: 1px solid #e2e8f0;
+            font-size: 9pt;
+            vertical-align: top;
+        }
+        tr:nth-child(even) td {
+            background-color: #f8fafc;
+        }
+
+        .stat-grid {
+            margin-bottom: 18px;
+        }
+        .stat-grid table {
+            margin-bottom: 0;
+        }
+        .stat-grid td {
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 14px 8px;
+            background-color: #ffffff;
+        }
+        .stat-value {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #0f172a;
+            display: block;
+            line-height: 1.2;
+        }
+        .stat-label {
+            font-size: 7.5pt;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            display: block;
+            margin-top: 4px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            font-size: 7.5pt;
+            font-weight: bold;
+            letter-spacing: 0.3px;
+        }
+        .badge-green { background-color: #dcfce7; color: #166534; }
+        .badge-red { background-color: #fee2e2; color: #991b1b; }
+        .badge-orange { background-color: #fff7ed; color: #9a3412; }
+        .badge-yellow { background-color: #fef9c3; color: #854d0e; }
+        .badge-gray { background-color: #f1f5f9; color: #475569; }
+        .badge-blue { background-color: #dbeafe; color: #1e40af; }
+        .badge-purple { background-color: #f3e8ff; color: #6b21a8; }
+
+        .text-muted { color: #64748b; font-size: 8.5pt; }
+        .text-success { color: #16a34a; }
+        .text-danger { color: #dc2626; }
+        .text-warning { color: #d97706; }
+        .text-primary { color: #2563EB; }
+
+        .chart-container {
+            text-align: center;
+            margin: 16px 0;
+        }
+
+        .dashboard-row {
+            margin-bottom: 14px;
+        }
+        .dashboard-row > table > tbody > tr > td {
+            border: none;
+            vertical-align: top;
+            padding: 0;
+        }
+        .dashboard-col-left {
+            padding-right: 8px !important;
+        }
+        .dashboard-col-right {
+            padding-left: 8px !important;
+        }
+
+        .mini-stat {
+            border: 1px solid #e2e8f0;
+            text-align: center;
+            padding: 10px 6px;
+            background-color: #ffffff;
+        }
+        .mini-stat-value {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #0f172a;
+            display: block;
+            line-height: 1.2;
+        }
+        .mini-stat-label {
+            font-size: 7pt;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            display: block;
+            margin-top: 3px;
+        }
+
+        .overdue-indicator {
+            display: inline-block;
+            padding: 1px 6px;
+            font-size: 7pt;
+            font-weight: bold;
+            background-color: #fef2f2;
+            color: #dc2626;
+            border: 1px solid #fecaca;
+        }
+        .resolved-indicator {
+            color: #16a34a;
+            font-weight: bold;
+        }
+
+        .photo-gallery-item {
+            border: 1px solid #e2e8f0;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            background-color: #ffffff;
+        }
+        .photo-gallery-title {
+            font-size: 9pt;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 6px;
+        }
+        .photo-gallery-meta {
+            font-size: 7.5pt;
+            color: #64748b;
+            margin-bottom: 8px;
+        }
+        .photo-gallery-grid td {
+            border: none;
+            padding: 3px;
+            vertical-align: top;
+        }
+        .photo-gallery-grid img,
+        .photo-placeholder {
+            width: 100%;
+            height: 140px;
+            border: 1px solid #e2e8f0;
+            object-fit: cover;
+        }
+        .photo-placeholder {
+            background: #f1f5f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #94a3b8;
+            font-size: 9pt;
+        }
+
+        .compact-table th {
+            padding: 5px 8px;
+            font-size: 7.5pt;
+        }
+        .compact-table td {
+            padding: 4px 8px;
+            font-size: 8pt;
+        }
+
+        .days-open {
+            font-weight: bold;
+            font-size: 8.5pt;
+        }
+        .days-open-high { color: #dc2626; }
+        .days-open-medium { color: #d97706; }
+        .days-open-low { color: #16a34a; }
+
+        .entity-code {
+            font-size: 7.5pt;
+            color: #64748b;
+        }
+
+        .page-footer {
+            font-size: 7.5pt;
+            color: #94a3b8;
+            border-top: 1px solid #e2e8f0;
+            padding: 8px 2cm;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+        .page-footer table td {
+            border: none;
+            padding: 0;
+            font-size: 7.5pt;
+            color: #94a3b8;
+        }
+
+        /* Mock chart styles */
+        .mock-chart {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 4px;
+            padding: 16px;
+            text-align: center;
+        }
+        .mock-chart-title {
+            font-size: 11pt;
+            font-weight: bold;
+            color: #1e293b;
+            margin-bottom: 12px;
+        }
+        .mock-pie {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            position: relative;
+        }
+        .mock-donut {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            margin: 0 auto 10px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .mock-donut-center {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22pt;
+            font-weight: bold;
+            position: absolute;
+        }
+        .mock-legend {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            font-size: 8pt;
+            color: #475569;
+            flex-wrap: wrap;
+        }
+        .mock-legend-dot {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 2px;
+            margin-right: 4px;
+            vertical-align: middle;
+        }
+        .mock-bar-chart {
+            padding: 8px 0;
+        }
+        .mock-bar-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .mock-bar-label {
+            width: 100px;
+            font-size: 9pt;
+            color: #475569;
+            text-align: right;
+            padding-right: 10px;
+        }
+        .mock-bar-track {
+            flex: 1;
+            height: 22px;
+            background: #f1f5f9;
+            border-radius: 3px;
+            overflow: hidden;
+            position: relative;
+        }
+        .mock-bar-fill {
+            height: 100%;
+            border-radius: 3px;
+        }
+        .mock-bar-value {
+            font-size: 10pt;
+            font-weight: bold;
+            color: #334155;
+            margin-left: 8px;
+            min-width: 30px;
+        }
+    </style>
+</head>
+<body>
+
+<!-- ==================== SAYFA 1: PERFORMANS RAPORU ==================== -->
+<div class="page">
+    <div class="header">
+        <div class="header-top">
+            <table>
+                <tr>
+                    <td style="width: 50%; border: none;">
+                        <span class="brand-name">KAREKONTROL</span>
+                    </td>
+                    <td style="width: 50%; text-align: right; border: none;">
+                        <span class="brand-name" style="font-size: 11pt; letter-spacing: 0.5px;">ABC Endüstri A.Ş.</span>
+                        <br/><span class="brand-date">04.03.2026 14:30</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="header-bottom">
+            <div class="header-meta">ABC Endüstri A.Ş. &mdash; 2/2026</div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <h1>Performans Raporu</h1>
+        <p class="text-muted" style="margin-top: -4px; margin-bottom: 18px;">Dönem: 2/2026</p>
+
+        <!-- VARLIK ÖZETİ -->
+        <h2>Varlık Özeti</h2>
+        <div class="stat-grid">
+            <table>
+                <tr>
+                    <td>
+                        <span class="stat-value text-primary">45</span>
+                        <span class="stat-label">Toplam Prosedür</span>
+                    </td>
+                    <td>
+                        <span class="stat-value text-success">38</span>
+                        <span class="stat-label">Tamamlanan</span>
+                    </td>
+                    <td>
+                        <span class="stat-value text-success">%84.4</span>
+                        <span class="stat-label">Tamamlanma Oranı</span>
+                    </td>
+                    <td>
+                        <span class="stat-value">1s 25dk</span>
+                        <span class="stat-label">Ort. Kontrol Süresi</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- UYGUNSUZLUK ÖZETİ -->
+        <h2>Uygunsuzluk Özeti</h2>
+        <div>
+            <div class="stat-grid">
+                <table>
+                    <tr>
+                        <td>
+                            <span class="stat-value text-danger">12</span>
+                            <span class="stat-label">Tespit Edilen Uygunsuzluk</span>
+                        </td>
+                        <td>
+                            <span class="stat-value text-success">8</span>
+                            <span class="stat-label">Düzeltici Önleyici Faaliyet</span>
+                        </td>
+                        <td>
+                            <span class="stat-value text-warning">%66.7</span>
+                            <span class="stat-label">DÖF Oranı</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+            <div class="stat-grid">
+                <table>
+                    <tr>
+                        <td>
+                            <span class="stat-value text-danger">2</span>
+                            <span class="stat-label">Gecikmiş</span>
+                        </td>
+                        <td>
+                            <span class="stat-value">5 gün</span>
+                            <span class="stat-label">Ort. DÖF Süresi</span>
+                        </td>
+                        <td>
+                            <!-- 0=yeşil, 1-3=sarı, 4+=kırmızı -->
+                            <span class="stat-value text-danger">4</span>
+                            <span class="stat-label">Devam Eden Uygunsuzluklar</span>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- KONTROL GRAFİKLERİ -->
+        <h2 style="text-align: center; border-left: none; padding-left: 0;">Kontrol Grafikleri</h2>
+        <div class="dashboard-row">
+            <table>
+                <tr>
+                    <td class="dashboard-col-left" style="width: 50%; border: none;">
+                        <div class="mock-chart">
+                            <div class="mock-chart-title">Kontrol Grafikleri</div>
+                            <svg viewBox="0 0 200 200" width="180" height="180">
+                                <circle cx="100" cy="100" r="90" fill="#22c55e" />
+                                <path d="M100,100 L100,10 A90,90 0 0,1 177.8,145 Z" fill="#3b82f6" />
+                                <path d="M100,100 L177.8,145 A90,90 0 0,1 155,181.2 Z" fill="#94a3b8" />
+                                <text x="55" y="75" fill="#fff" font-size="14" font-weight="bold">73%</text>
+                                <text x="145" y="85" fill="#fff" font-size="12" font-weight="bold">20%</text>
+                                <text x="145" y="145" fill="#fff" font-size="10" font-weight="bold">7%</text>
+                            </svg>
+                            <div class="mock-legend">
+                                <span><span class="mock-legend-dot" style="background:#22c55e;"></span>Tamamlandı (33)</span>
+                                <span><span class="mock-legend-dot" style="background:#3b82f6;"></span>Devam Ediyor (9)</span>
+                                <span><span class="mock-legend-dot" style="background:#94a3b8;"></span>İptal (3)</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="dashboard-col-right" style="width: 50%; border: none;">
+                        <div class="mock-chart">
+                            <div class="mock-chart-title">Uyum Özeti</div>
+                            <svg viewBox="0 0 200 200" width="180" height="180">
+                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="#22c55e" stroke-width="36" stroke-dasharray="410 566" stroke-dashoffset="0" transform="rotate(-90 100 100)" />
+                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="#ef4444" stroke-width="36" stroke-dasharray="85 566" stroke-dashoffset="-410" transform="rotate(-90 100 100)" />
+                                <circle cx="100" cy="100" r="90" fill="transparent" stroke="#94a3b8" stroke-width="36" stroke-dasharray="71 566" stroke-dashoffset="-495" transform="rotate(-90 100 100)" />
+                                <circle cx="100" cy="100" r="52" fill="#ffffff" />
+                                <text x="100" y="105" text-anchor="middle" fill="#16a34a" font-size="28" font-weight="bold">%72</text>
+                            </svg>
+                            <div class="mock-legend">
+                                <span><span class="mock-legend-dot" style="background:#22c55e;"></span>Uygun (130)</span>
+                                <span><span class="mock-legend-dot" style="background:#ef4444;"></span>Uygunsuz (27)</span>
+                                <span><span class="mock-legend-dot" style="background:#94a3b8;"></span>Kontrol Dışı (23)</span>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- DÜZELTİCİ ÖNLEYİCİ FAALİYET GRAFİĞİ -->
+        <div class="mock-chart" style="margin: 16px 0;">
+            <div class="mock-chart-title">Düzeltici Önleyici Faaliyet</div>
+            <div class="mock-bar-chart">
+                <div class="mock-bar-row">
+                    <div class="mock-bar-label">Tespit Edilen</div>
+                    <div class="mock-bar-track">
+                        <div class="mock-bar-fill" style="width: 100%; background: #ef4444;"></div>
+                    </div>
+                    <div class="mock-bar-value">12</div>
+                </div>
+                <div class="mock-bar-row">
+                    <div class="mock-bar-label">DÖF Tamamlanan</div>
+                    <div class="mock-bar-track">
+                        <div class="mock-bar-fill" style="width: 66.7%; background: #22c55e;"></div>
+                    </div>
+                    <div class="mock-bar-value">8</div>
+                </div>
+                <div class="mock-bar-row">
+                    <div class="mock-bar-label">Devam Eden</div>
+                    <div class="mock-bar-track">
+                        <div class="mock-bar-fill" style="width: 33.3%; background: #3b82f6;"></div>
+                    </div>
+                    <div class="mock-bar-value">4</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RİSK DEĞERLENDİRMESİ -->
+        <h2>Risk Değerlendirmesi</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Ciddiyet Seviyesi</th>
+                    <th style="text-align: center;">Sayı</th>
+                    <th style="text-align: center; width: 40%;">Oran</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-red">Kritik</span></td>
+                    <td style="text-align: center; font-weight: bold;">2</td>
+                    <td style="text-align: center;">%17</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-orange">Yüksek</span></td>
+                    <td style="text-align: center; font-weight: bold;">4</td>
+                    <td style="text-align: center;">%33</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-yellow">Orta</span></td>
+                    <td style="text-align: center; font-weight: bold;">4</td>
+                    <td style="text-align: center;">%33</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-gray">Düşük</span></td>
+                    <td style="text-align: center; font-weight: bold;">2</td>
+                    <td style="text-align: center;">%17</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="page-footer">
+        <table>
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    KareKontrol &mdash; KareKontrol Yönetim Sistemi Paneli
+                    <br/><span style="font-size: 6.5pt; color: #b0b8c4;">Güçlü Yönetim Dijital Kontrol</span>
+                </td>
+                <td style="width: 50%; text-align: right;">1 / 4</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== SAYFA 2: VARLIK / MAKİNE PERFORMANSI ==================== -->
+<div class="page">
+    <div class="header">
+        <div class="header-top">
+            <table>
+                <tr>
+                    <td style="width: 50%; border: none;">
+                        <span class="brand-name">KAREKONTROL</span>
+                    </td>
+                    <td style="width: 50%; text-align: right; border: none;">
+                        <span class="brand-name" style="font-size: 11pt; letter-spacing: 0.5px;">ABC Endüstri A.Ş.</span>
+                        <br/><span class="brand-date">04.03.2026 14:30</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="header-bottom">
+            <div class="header-meta">ABC Endüstri A.Ş. &mdash; 2/2026</div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <h2>Varlık / Makine Performansı</h2>
+        <table class="compact-table">
+            <thead>
+                <tr>
+                    <th>Varlık</th>
+                    <th>Tip</th>
+                    <th>Departman</th>
+                    <th style="text-align: center;">Toplam</th>
+                    <th style="text-align: center;">Tamamlanan</th>
+                    <th style="text-align: center;">Oran</th>
+                    <th style="text-align: center;">Uygunsuzluk</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <strong>CNC Torna Makinesi</strong>
+                        <span class="entity-code">(MCH-001)</span>
+                    </td>
+                    <td class="text-muted">MACHINE</td>
+                    <td class="text-muted">Üretim</td>
+                    <td style="text-align: center;">12</td>
+                    <td style="text-align: center;">10</td>
+                    <td style="text-align: center;">
+                        <span class="text-success" style="font-weight: bold;">%83.3</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="text-danger" style="font-weight: bold;">3</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Hidrolik Pres</strong>
+                        <span class="entity-code">(MCH-002)</span>
+                    </td>
+                    <td class="text-muted">MACHINE</td>
+                    <td class="text-muted">Üretim</td>
+                    <td style="text-align: center;">8</td>
+                    <td style="text-align: center;">7</td>
+                    <td style="text-align: center;">
+                        <span class="text-success" style="font-weight: bold;">%87.5</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="text-danger" style="font-weight: bold;">2</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Kaynak Robotu</strong>
+                        <span class="entity-code">(MCH-003)</span>
+                    </td>
+                    <td class="text-muted">EQUIPMENT</td>
+                    <td class="text-muted">Montaj</td>
+                    <td style="text-align: center;">10</td>
+                    <td style="text-align: center;">9</td>
+                    <td style="text-align: center;">
+                        <span class="text-success" style="font-weight: bold;">%90.0</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="text-danger" style="font-weight: bold;">4</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Kompresör Ünitesi</strong>
+                        <span class="entity-code">(EQP-004)</span>
+                    </td>
+                    <td class="text-muted">EQUIPMENT</td>
+                    <td class="text-muted">Bakım</td>
+                    <td style="text-align: center;">6</td>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center;">
+                        <span class="text-success" style="font-weight: bold;">%83.3</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span style="color: #94a3b8;">0</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Forklift #1</strong>
+                        <span class="entity-code">(VHC-005)</span>
+                    </td>
+                    <td class="text-muted">VEHICLE</td>
+                    <td class="text-muted">Lojistik</td>
+                    <td style="text-align: center;">5</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">
+                        <span class="text-success" style="font-weight: bold;">%80.0</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="text-danger" style="font-weight: bold;">1</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <strong>Elektrik Panosu A</strong>
+                        <span class="entity-code">(EQP-006)</span>
+                    </td>
+                    <td class="text-muted">EQUIPMENT</td>
+                    <td class="text-muted">Bakım</td>
+                    <td style="text-align: center;">4</td>
+                    <td style="text-align: center;">3</td>
+                    <td style="text-align: center;">
+                        <span class="text-warning" style="font-weight: bold;">%75.0</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="text-danger" style="font-weight: bold;">2</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="page-footer">
+        <table>
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    KareKontrol &mdash; KareKontrol Yönetim Sistemi Paneli
+                    <br/><span style="font-size: 6.5pt; color: #b0b8c4;">Güçlü Yönetim Dijital Kontrol</span>
+                </td>
+                <td style="width: 50%; text-align: right;">2 / 4</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== SAYFA 3: UYGUNSUZLUK DETAY TABLOSU ==================== -->
+<div class="page">
+    <div class="header">
+        <div class="header-top">
+            <table>
+                <tr>
+                    <td style="width: 50%; border: none;">
+                        <span class="brand-name">KAREKONTROL</span>
+                    </td>
+                    <td style="width: 50%; text-align: right; border: none;">
+                        <span class="brand-name" style="font-size: 11pt; letter-spacing: 0.5px;">ABC Endüstri A.Ş.</span>
+                        <br/><span class="brand-date">04.03.2026 14:30</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="header-bottom">
+            <div class="header-meta">ABC Endüstri A.Ş. &mdash; 2/2026</div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <h1>Uygunsuzluk Detay Tablosu</h1>
+        <p class="text-muted" style="margin-top: -4px; margin-bottom: 14px;">
+            Dönem: 2/2026 &mdash; Toplam 12 kayıt
+        </p>
+
+        <table class="compact-table">
+            <thead>
+                <tr>
+                    <th style="width: 4%;">#</th>
+                    <th style="width: 15%;">Başlık</th>
+                    <th style="text-align: center; width: 8%;">Önem</th>
+                    <th style="text-align: center; width: 8%;">Durum</th>
+                    <th style="width: 13%;">Varlık</th>
+                    <th style="width: 10%;">Departman</th>
+                    <th style="width: 10%;">Raporlayan</th>
+                    <th style="width: 10%;">Atanan</th>
+                    <th style="text-align: center; width: 7%;">Açılış</th>
+                    <th style="text-align: center; width: 7%;">Termin</th>
+                    <th style="text-align: center; width: 8%;">Gün</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">1</td>
+                    <td><strong>Hidrolik sızıntı tespit...</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-red">Kritik</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>CNC Torna <span class="entity-code">(MCH-001)</span></td>
+                    <td class="text-muted">Üretim</td>
+                    <td class="text-muted">Ahmet Yılmaz</td>
+                    <td class="text-muted">Mehmet Demir</td>
+                    <td style="text-align: center;" class="text-muted">02.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">10.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">3 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">2</td>
+                    <td><strong>Emniyet valfi arızalı</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-red">Kritik</span></td>
+                    <td style="text-align: center;"><span class="badge badge-blue">Devam Ediyor</span></td>
+                    <td>Hidrolik Pres <span class="entity-code">(MCH-002)</span></td>
+                    <td class="text-muted">Üretim</td>
+                    <td class="text-muted">Ayşe Kaya</td>
+                    <td class="text-muted">Ali Öztürk</td>
+                    <td style="text-align: center;" class="text-muted">15.02.2026</td>
+                    <td style="text-align: center;">
+                        <span class="overdue-indicator">20.02.2026</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-medium">17</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">3</td>
+                    <td><strong>Kaynak maskesi hasarlı</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-orange">Yüksek</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>Kaynak Robotu <span class="entity-code">(MCH-003)</span></td>
+                    <td class="text-muted">Montaj</td>
+                    <td class="text-muted">Fatma Şen</td>
+                    <td class="text-muted">Hasan Çelik</td>
+                    <td style="text-align: center;" class="text-muted">05.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">12.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">2 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">4</td>
+                    <td><strong>Topraklama hatası</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-orange">Yüksek</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>Elektrik Panosu <span class="entity-code">(EQP-006)</span></td>
+                    <td class="text-muted">Bakım</td>
+                    <td class="text-muted">Mehmet Demir</td>
+                    <td class="text-muted">Mustafa Aydın</td>
+                    <td style="text-align: center;" class="text-muted">08.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">15.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">5 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">5</td>
+                    <td><strong>Yağ seviyesi düşük</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-orange">Yüksek</span></td>
+                    <td style="text-align: center;"><span class="badge badge-purple">Devam Ediyor</span></td>
+                    <td>Hidrolik Pres <span class="entity-code">(MCH-002)</span></td>
+                    <td class="text-muted">Üretim</td>
+                    <td class="text-muted">Ahmet Yılmaz</td>
+                    <td class="text-muted">Üretim</td>
+                    <td style="text-align: center;" class="text-muted">18.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">28.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">14</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">6</td>
+                    <td><strong>Koruyucu kapak eksik</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-orange">Yüksek</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>Kaynak Robotu <span class="entity-code">(MCH-003)</span></td>
+                    <td class="text-muted">Montaj</td>
+                    <td class="text-muted">Hasan Çelik</td>
+                    <td class="text-muted">Fatma Şen</td>
+                    <td style="text-align: center;" class="text-muted">10.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">17.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">4 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">7</td>
+                    <td><strong>Titreşim sensörü hata...</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-yellow">Orta</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>CNC Torna <span class="entity-code">(MCH-001)</span></td>
+                    <td class="text-muted">Üretim</td>
+                    <td class="text-muted">Ali Öztürk</td>
+                    <td class="text-muted">Ahmet Yılmaz</td>
+                    <td style="text-align: center;" class="text-muted">12.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">22.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">7 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">8</td>
+                    <td><strong>Lastik basıncı düşük</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-yellow">Orta</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>Forklift #1 <span class="entity-code">(VHC-005)</span></td>
+                    <td class="text-muted">Lojistik</td>
+                    <td class="text-muted">Mustafa Aydın</td>
+                    <td class="text-muted">Lojistik</td>
+                    <td style="text-align: center;" class="text-muted">14.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">18.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">1 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">9</td>
+                    <td><strong>Havalandırma filtre...</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-yellow">Orta</span></td>
+                    <td style="text-align: center;"><span class="badge badge-purple">Devam Ediyor</span></td>
+                    <td>Kaynak Robotu <span class="entity-code">(MCH-003)</span></td>
+                    <td class="text-muted">Montaj</td>
+                    <td class="text-muted">Ayşe Kaya</td>
+                    <td class="text-muted">Montaj</td>
+                    <td style="text-align: center;" class="text-muted">20.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">05.03.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">12</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">10</td>
+                    <td><strong>Uyarı etiketi yıpranmış</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-yellow">Orta</span></td>
+                    <td style="text-align: center;"><span class="badge badge-green">Tamamlandı</span></td>
+                    <td>Elektrik Panosu <span class="entity-code">(EQP-006)</span></td>
+                    <td class="text-muted">Bakım</td>
+                    <td class="text-muted">Mehmet Demir</td>
+                    <td class="text-muted">Bakım</td>
+                    <td style="text-align: center;" class="text-muted">22.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">25.02.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">2 <span class="resolved-indicator">&#10003;</span></span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">11</td>
+                    <td><strong>Gres noktası atlanmış</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-gray">Düşük</span></td>
+                    <td style="text-align: center;"><span class="badge badge-red">Eskalasyon</span></td>
+                    <td>CNC Torna <span class="entity-code">(MCH-001)</span></td>
+                    <td class="text-muted">Üretim</td>
+                    <td class="text-muted">Fatma Şen</td>
+                    <td class="text-muted">Üretim</td>
+                    <td style="text-align: center;" class="text-muted">25.02.2026</td>
+                    <td style="text-align: center;">
+                        <span class="overdue-indicator">01.03.2026</span>
+                    </td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-high">7</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align: center; color: #94a3b8;">12</td>
+                    <td><strong>Aydınlatma yetersiz</strong></td>
+                    <td style="text-align: center;"><span class="badge badge-gray">Düşük</span></td>
+                    <td style="text-align: center;"><span class="badge badge-purple">Devam Ediyor</span></td>
+                    <td>Kaynak Robotu <span class="entity-code">(MCH-003)</span></td>
+                    <td class="text-muted">Montaj</td>
+                    <td class="text-muted">Hasan Çelik</td>
+                    <td class="text-muted">Montaj</td>
+                    <td style="text-align: center;" class="text-muted">27.02.2026</td>
+                    <td style="text-align: center;"><span class="text-muted">10.03.2026</span></td>
+                    <td style="text-align: center;">
+                        <span class="days-open days-open-low">5</span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="page-footer">
+        <table>
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    KareKontrol &mdash; KareKontrol Yönetim Sistemi Paneli
+                    <br/><span style="font-size: 6.5pt; color: #b0b8c4;">Güçlü Yönetim Dijital Kontrol</span>
+                </td>
+                <td style="width: 50%; text-align: right;">3 / 4</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<!-- ==================== SAYFA 4: UYGUNSUZLUK FOTOĞRAFLARI ==================== -->
+<div class="page">
+    <div class="header">
+        <div class="header-top">
+            <table>
+                <tr>
+                    <td style="width: 50%; border: none;">
+                        <span class="brand-name">KAREKONTROL</span>
+                    </td>
+                    <td style="width: 50%; text-align: right; border: none;">
+                        <span class="brand-name" style="font-size: 11pt; letter-spacing: 0.5px;">ABC Endüstri A.Ş.</span>
+                        <br/><span class="brand-date">04.03.2026 14:30</span>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="header-bottom">
+            <div class="header-meta">ABC Endüstri A.Ş. &mdash; 2/2026</div>
+        </div>
+    </div>
+
+    <div class="page-content">
+        <h1>Uygunsuzluk Fotoğrafları</h1>
+        <p class="text-muted" style="margin-top: -4px; margin-bottom: 14px;">
+            Dönem: 2/2026 &mdash; Fotoğraflı 3 uygunsuzluk
+        </p>
+
+        <!-- Fotoğraf 1 -->
+        <div class="photo-gallery-item">
+            <div class="photo-gallery-title">
+                1. Hidrolik sızıntı tespit edildi
+                &nbsp;
+                <span class="badge badge-red">Kritik</span>
+            </div>
+            <div class="photo-gallery-meta">
+                Varlık: CNC Torna Makinesi
+                <span class="entity-code">(MCH-001)</span>
+            </div>
+            <table class="photo-gallery-grid">
+                <tr>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 1</div>
+                    </td>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 2</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 3</div>
+                    </td>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 4</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Fotoğraf 2 -->
+        <div class="photo-gallery-item">
+            <div class="photo-gallery-title">
+                2. Emniyet valfi arızalı
+                &nbsp;
+                <span class="badge badge-red">Kritik</span>
+            </div>
+            <div class="photo-gallery-meta">
+                Varlık: Hidrolik Pres
+                <span class="entity-code">(MCH-002)</span>
+            </div>
+            <table class="photo-gallery-grid">
+                <tr>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 1</div>
+                    </td>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 2</div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+
+        <!-- Fotoğraf 3 -->
+        <div class="photo-gallery-item">
+            <div class="photo-gallery-title">
+                3. Kaynak maskesi hasarlı
+                &nbsp;
+                <span class="badge badge-orange">Yüksek</span>
+            </div>
+            <div class="photo-gallery-meta">
+                Varlık: Kaynak Robotu
+                <span class="entity-code">(MCH-003)</span>
+            </div>
+            <table class="photo-gallery-grid">
+                <tr>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 1</div>
+                    </td>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 2</div>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width: 50%;">
+                        <div class="photo-placeholder">📷 Fotoğraf 3</div>
+                    </td>
+                    <td style="width: 50%;"></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="page-footer">
+        <table>
+            <tr>
+                <td style="width: 50%; text-align: left;">
+                    KareKontrol &mdash; KareKontrol Yönetim Sistemi Paneli
+                    <br/><span style="font-size: 6.5pt; color: #b0b8c4;">Güçlü Yönetim Dijital Kontrol</span>
+                </td>
+                <td style="width: 50%; text-align: right;">4 / 4</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+28 Şubat - 1 Mart
+-Raporlama motoru backend entegresi
+-web sitesi yayınlanışı
+-Ara geliştirmeler
+
+1 Mart ---
+-Store fotoğrafları
+-Gizlilik sözleşmesi hazırlanması
+-Store kapalı test başlangıcı
+
+15-25 Mart
+-Google Play - App Store çıkış

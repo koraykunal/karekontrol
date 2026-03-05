@@ -1,0 +1,6 @@
+-r base.txt
+
+gunicorn
+whitenoise
+sentry-sdk
+python-magic==0.4.27

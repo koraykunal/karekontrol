@@ -1,0 +1,196 @@
+{% extends "reports/base_report.html" %}
+
+{% block header_meta %}Pros&#x65;d&#252;r Tamamlama Raporu{% endblock %}
+
+{% block content %}
+<h1>{{ procedure_title }}</h1>
+
+<div class="info-card no-break">
+    <table>
+        <tr>
+            <td style="width: 15%;"><span class="info-label">Varl&#305;k</span></td>
+            <td style="width: 35%;"><span class="info-value">{{ entity_name }}</span> <span class="text-muted">({{ entity_code }})</span></td>
+            <td style="width: 15%;"><span class="info-label">Departman</span></td>
+            <td style="width: 35%;"><span class="info-value">{{ department_name|default:"-" }}</span></td>
+        </tr>
+        <tr>
+            <td><span class="info-label">Ba&#351;lang&#305;&#231;</span></td>
+            <td><span class="info-value">{{ started_at }}</span></td>
+            <td><span class="info-label">Tamamlanma</span></td>
+            <td><span class="info-value">{{ completed_at }}</span></td>
+        </tr>
+        <tr>
+            <td><span class="info-label">Toplam S&#252;re</span></td>
+            <td><span class="info-value">{{ duration_formatted }}</span></td>
+            <td><span class="info-label">Y&#252;r&#252;t&#252;c&#252;</span></td>
+            <td><span class="info-value">{{ completed_by_name|default:started_by_name }}</span></td>
+        </tr>
+    </table>
+</div>
+
+<h2>Uyum &#214;zeti</h2>
+
+<table class="no-break" style="margin-bottom: 18px;">
+    <tr>
+        <td style="width: 45%; border: none; vertical-align: top; padding: 0;">
+            {% if compliance_chart %}
+            <div class="chart-container">
+                <img src="data:image/png;base64,{{ compliance_chart }}" style="max-width: 100%;">
+            </div>
+            {% endif %}
+        </td>
+        <td style="width: 55%; border: none; vertical-align: top; padding: 0 0 0 16px;">
+            <table style="margin-bottom: 12px;">
+                <tr>
+                    <td style="border: 1px solid #e2e8f0; text-align: center; padding: 14px 8px; background-color: #ffffff; width: 50%;">
+                        <span class="stat-value text-primary">{{ total_steps }}</span>
+                        <span class="stat-label">Toplam Ad&#305;m</span>
+                    </td>
+                    <td style="border: 1px solid #e2e8f0; text-align: center; padding: 14px 8px; background-color: #ffffff; width: 50%;">
+                        <span class="stat-value text-success">{{ compliant_steps }}</span>
+                        <span class="stat-label">Uyumlu</span>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="border: 1px solid #e2e8f0; text-align: center; padding: 14px 8px; background-color: #ffffff;">
+                        <span class="stat-value text-danger">{{ non_compliant_steps }}</span>
+                        <span class="stat-label">Uyumsuz</span>
+                    </td>
+                    <td style="border: 1px solid #e2e8f0; text-align: center; padding: 14px 8px; background-color: #ffffff;">
+                        <span class="stat-value" style="color: #64748b;">{{ skipped_steps }}</span>
+                        <span class="stat-label">Atlanan</span>
+                    </td>
+                </tr>
+            </table>
+            {% if issue_count > 0 %}
+            <div style="text-align: center; padding: 8px; background-color: #fef2f2; border: 1px solid #fecaca;">
+                <span style="font-size: 9pt; color: #dc2626; font-weight: bold;">
+                    {{ issue_count }} uygunsuzluk tespit edildi
+                </span>
+            </div>
+            {% endif %}
+        </td>
+    </tr>
+</table>
+
+<h2>Ad&#305;m Detaylar&#305;</h2>
+<table>
+    <thead>
+        <tr>
+            <th style="width:5%">#</th>
+            <th style="width:26%">Ad&#305;m</th>
+            <th style="width:11%">Durum</th>
+            <th style="width:17%">Tamamlayan</th>
+            <th style="width:14%">Tarih</th>
+            <th style="width:8%">S&#252;re</th>
+            <th style="width:19%">Notlar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for step in step_logs %}
+        <tr class="no-break">
+            <td style="text-align: center; font-weight: bold; color: #64748b;">{{ step.step_order }}</td>
+            <td><strong>{{ step.step_title }}</strong></td>
+            <td>
+                {% if step.completion_status == 'COMPLIANT' %}
+                    <span class="badge badge-green">Uyumlu</span>
+                {% elif step.completion_status == 'NON_COMPLIANT' %}
+                    <span class="badge badge-red">Uyumsuz</span>
+                {% elif step.completion_status == 'SKIPPED' %}
+                    <span class="badge badge-gray">Atland&#305;</span>
+                {% else %}
+                    <span class="badge badge-yellow">Bekliyor</span>
+                {% endif %}
+            </td>
+            <td class="text-muted">{{ step.completed_by_name|default:"-" }}</td>
+            <td class="text-muted">{{ step.completed_at_formatted|default:"-" }}</td>
+            <td class="text-muted">{% if step.duration_minutes %}{{ step.duration_minutes }} dk{% else %}-{% endif %}</td>
+            <td class="text-muted">{{ step.notes|default:"-"|truncatechars:80 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if issues %}
+<div class="page-break"></div>
+<h2>Uygunsuzluk Detaylar&#305;</h2>
+
+{% for issue in issues %}
+<div class="section-card no-break">
+    <table>
+        <tr>
+            <td style="border: none; padding: 2px 10px;" colspan="4">
+                <strong style="font-size: 10pt;">{{ issue.title }}</strong>
+                &nbsp;
+                {% if issue.severity == 'CRITICAL' %}
+                    <span class="badge badge-red">Kritik</span>
+                {% elif issue.severity == 'HIGH' %}
+                    <span class="badge badge-orange">Y&#252;ksek</span>
+                {% elif issue.severity == 'MEDIUM' %}
+                    <span class="badge badge-yellow">Orta</span>
+                {% else %}
+                    <span class="badge badge-gray">D&#252;&#351;&#252;k</span>
+                {% endif %}
+                &nbsp;
+                {% if issue.status == 'RESOLVED' or issue.status == 'CLOSED' or issue.status == 'VERIFIED' %}
+                    <span class="badge badge-green">Tamamland&#305;</span>
+                {% elif issue.status == 'ESCALATED' %}
+                    <span class="badge badge-red">Eskalasyon</span>
+                {% elif issue.status == 'IN_PROGRESS' %}
+                    <span class="badge badge-blue">Devam Ediyor</span>
+                {% else %}
+                    <span class="badge badge-purple">Devam Ediyor</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% if issue.description %}
+        <tr>
+            <td style="width: 20%; border: none;"><span class="info-label">A&#231;&#305;klama</span></td>
+            <td style="border: none;" colspan="3">{{ issue.description }}</td>
+        </tr>
+        {% endif %}
+        <tr>
+            <td style="border: none;"><span class="info-label">Raporlayan</span></td>
+            <td style="border: none;">{{ issue.reported_by_name }}</td>
+            <td style="border: none;"><span class="info-label">Atanan</span></td>
+            <td style="border: none;">{{ issue.assigned_to_name|default:issue.assigned_dept_name|default:"-" }}</td>
+        </tr>
+        {% if issue.due_date %}
+        <tr>
+            <td style="border: none;"><span class="info-label">Termin Tarihi</span></td>
+            <td style="border: none;" colspan="3"><strong>{{ issue.due_date }}</strong></td>
+        </tr>
+        {% endif %}
+        {% if issue.resolved_notes %}
+        <tr>
+            <td style="border: none;"><span class="info-label">&#199;&#246;z&#252;m</span></td>
+            <td style="border: none;" colspan="3">{{ issue.resolved_notes }}</td>
+        </tr>
+        {% endif %}
+    </table>
+    {% if issue.photos %}
+    <table class="photo-grid">
+        <tr>
+            {% for photo in issue.photos %}
+            <td style="width: 33%;">
+                <img src="{{ photo }}">
+            </td>
+            {% if forloop.counter|divisibleby:3 and not forloop.last %}
+        </tr>
+        <tr>
+            {% endif %}
+            {% endfor %}
+        </tr>
+    </table>
+    {% endif %}
+</div>
+{% endfor %}
+{% endif %}
+
+{% if procedure_notes %}
+<h2>Pros&#x65;d&#252;r Notlar&#305;</h2>
+<div class="info-card">
+    <p>{{ procedure_notes }}</p>
+</div>
+{% endif %}
+{% endblock %}

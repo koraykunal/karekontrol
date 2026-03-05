@@ -1,0 +1,343 @@
+{% extends "reports/base_report.html" %}
+
+{% block header_meta %}{{ organization_name }} &mdash; {{ period }}{% endblock %}
+
+{% block content %}
+<h1>Performans Raporu</h1>
+<p class="text-muted" style="margin-top: -4px; margin-bottom: 18px;">D&#246;nem: {{ period }}</p>
+
+<h2>Varl&#305;k &#214;zeti</h2>
+<div class="stat-grid no-break">
+    <table>
+        <tr>
+            <td>
+                <span class="stat-value text-primary">{{ total_procedures }}</span>
+                <span class="stat-label">Toplam Pros&#x65;d&#252;r</span>
+            </td>
+            <td>
+                <span class="stat-value text-success">{{ completed_procedures }}</span>
+                <span class="stat-label">Tamamlanan</span>
+            </td>
+            <td>
+                <span class="stat-value {% if completion_rate >= 80 %}text-success{% elif completion_rate >= 50 %}text-warning{% else %}text-danger{% endif %}">
+                    %{{ completion_rate }}
+                </span>
+                <span class="stat-label">Tamamlanma Oran&#305;</span>
+            </td>
+            <td>
+                <span class="stat-value">{{ avg_duration_formatted }}</span>
+                <span class="stat-label">Ort. Kontrol S&#252;resi</span>
+            </td>
+        </tr>
+    </table>
+</div>
+
+<h2>Uygunsuzluk &#214;zeti</h2>
+<div class="no-break">
+    <div class="stat-grid">
+        <table>
+            <tr>
+                <td>
+                    <span class="stat-value text-danger">{{ issues_opened_count }}</span>
+                    <span class="stat-label">Tespit Edilen Uygunsuzluk</span>
+                </td>
+                <td>
+                    <span class="stat-value text-success">{{ issues_resolved_count }}</span>
+                    <span class="stat-label">D&#252;zeltici &#214;nleyici Faaliyet</span>
+                </td>
+                <td>
+                    <span class="stat-value {% if resolution_rate >= 80 %}text-success{% elif resolution_rate >= 50 %}text-warning{% else %}text-danger{% endif %}">
+                        %{{ resolution_rate }}
+                    </span>
+                    <span class="stat-label">D&#214;F Oran&#305;</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <div class="stat-grid">
+        <table>
+            <tr>
+                <td>
+                    <span class="stat-value {% if overdue_count > 0 %}text-danger{% endif %}">{{ overdue_count }}</span>
+                    <span class="stat-label">Gecikmi&#351;</span>
+                </td>
+                <td>
+                    <span class="stat-value">{% if avg_resolution_days > 0 %}{{ avg_resolution_days }} g&#252;n{% else %}-{% endif %}</span>
+                    <span class="stat-label">Ort. D&#214;F S&#252;resi</span>
+                </td>
+                <td>
+                    <span class="stat-value {% if issues_still_open == 0 %}text-success{% elif issues_still_open <= 3 %}text-warning{% else %}text-danger{% endif %}">{{ issues_still_open }}</span>
+                    <span class="stat-label">Devam Eden Uygunsuzluklar</span>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<h2 style="text-align: center; border-left: none; padding-left: 0;">Kontrol Grafikleri</h2>
+<div class="dashboard-row no-break">
+    <table>
+        <tr>
+            <td class="dashboard-col-left" style="width: 50%;">
+                {% if status_chart %}
+                <div class="chart-container">
+                    <img src="data:image/png;base64,{{ status_chart }}" alt="Prosedur Durumlari" />
+                </div>
+                {% endif %}
+            </td>
+            <td class="dashboard-col-right" style="width: 50%;">
+                {% if compliance_summary_chart %}
+                <div class="chart-container">
+                    <img src="data:image/png;base64,{{ compliance_summary_chart }}" alt="Uyum Ozeti" />
+                </div>
+                {% else %}
+                <div class="stat-grid">
+                    <table>
+                        <tr>
+                            <td class="mini-stat">
+                                <span class="mini-stat-value text-success">{{ total_compliant }}</span>
+                                <span class="mini-stat-label">Uygun</span>
+                            </td>
+                            <td class="mini-stat">
+                                <span class="mini-stat-value text-danger">{{ total_non_compliant }}</span>
+                                <span class="mini-stat-label">Uygunsuz</span>
+                            </td>
+                            <td class="mini-stat">
+                                <span class="mini-stat-value" style="color: #64748b;">{{ total_skipped }}</span>
+                                <span class="mini-stat-label">Kontrol D&#305;&#351;&#305;</span>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                {% endif %}
+            </td>
+        </tr>
+    </table>
+</div>
+
+{% if resolution_chart %}
+<div class="chart-container no-break">
+    <img src="data:image/png;base64,{{ resolution_chart }}" alt="Cozulme Durumu" />
+</div>
+{% endif %}
+
+<h2>Risk De&#287;erlendirmesi</h2>
+<div class="no-break">
+    <table>
+        <thead>
+            <tr>
+                <th>Risk Seviyesi</th>
+                <th style="text-align: center;">Say&#305;</th>
+                <th style="text-align: center; width: 40%;">Oran</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><span class="badge badge-red">Kritik</span></td>
+                <td style="text-align: center; font-weight: bold;">{{ severity_critical }}</td>
+                <td style="text-align: center;">{% if issues_opened_count > 0 %}%{{ severity_critical_pct|floatformat:0 }}{% else %}-{% endif %}</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-orange">Y&#252;ksek</span></td>
+                <td style="text-align: center; font-weight: bold;">{{ severity_high }}</td>
+                <td style="text-align: center;">{% if issues_opened_count > 0 %}%{{ severity_high_pct|floatformat:0 }}{% else %}-{% endif %}</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-yellow">Orta</span></td>
+                <td style="text-align: center; font-weight: bold;">{{ severity_medium }}</td>
+                <td style="text-align: center;">{% if issues_opened_count > 0 %}%{{ severity_medium_pct|floatformat:0 }}{% else %}-{% endif %}</td>
+            </tr>
+            <tr>
+                <td><span class="badge badge-gray">D&#252;&#351;&#252;k</span></td>
+                <td style="text-align: center; font-weight: bold;">{{ severity_low }}</td>
+                <td style="text-align: center;">{% if issues_opened_count > 0 %}%{{ severity_low_pct|floatformat:0 }}{% else %}-{% endif %}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{% if entity_stats %}
+<h2>Varl&#305;k / Makine Performans&#305;</h2>
+<table class="compact-table">
+    <thead>
+        <tr>
+            <th>Varl&#305;k</th>
+            <th>Tip</th>
+            <th>Departman</th>
+            <th style="text-align: center;">Toplam</th>
+            <th style="text-align: center;">Tamamlanan</th>
+            <th style="text-align: center;">Oran</th>
+            <th style="text-align: center;">Uygunsuzluk</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for ent in entity_stats %}
+        <tr>
+            <td>
+                <strong>{{ ent.name }}</strong>
+                <span class="entity-code">({{ ent.code }})</span>
+            </td>
+            <td class="text-muted">{{ ent.entity_type }}</td>
+            <td class="text-muted">{{ ent.department }}</td>
+            <td style="text-align: center;">{{ ent.total }}</td>
+            <td style="text-align: center;">{{ ent.completed }}</td>
+            <td style="text-align: center;">
+                <span class="{% if ent.completion_rate >= 80 %}text-success{% elif ent.completion_rate >= 50 %}text-warning{% else %}text-danger{% endif %}" style="font-weight: bold;">
+                    %{{ ent.completion_rate }}
+                </span>
+            </td>
+            <td style="text-align: center;">
+                {% if ent.issues > 0 %}
+                    <span class="text-danger" style="font-weight: bold;">{{ ent.issues }}</span>
+                {% else %}
+                    <span style="color: #94a3b8;">0</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}
+
+{% if all_issues %}
+<div class="page-break landscape-page" style="text-align: center;">
+<h1 style="text-align: center;">Uygunsuzluk Detay Tablosu</h1>
+<p class="text-muted" style="margin-top: -4px; margin-bottom: 14px; text-align: center;">
+    D&#246;nem: {{ period }} &mdash; Toplam {{ all_issues_count }} kay&#305;t
+</p>
+
+<table class="compact-table" style="table-layout: fixed; width: 95%; margin: 0 auto; text-align: left;">
+    <thead>
+        <tr>
+            <th style="width: 3%;">#</th>
+            <th style="width: 20%;">Ba&#351;l&#305;k</th>
+            <th style="text-align: center; width: 7%;">&#214;nem</th>
+            <th style="text-align: center; width: 9%;">Durum</th>
+            <th style="width: 14%;">Varl&#305;k</th>
+            <th style="width: 11%;">Departman</th>
+            <th style="width: 11%;">Raporlayan</th>
+            <th style="text-align: center; width: 7%;">A&#231;&#305;l&#305;&#351;</th>
+            <th style="text-align: center; width: 7%;">Termin</th>
+            <th style="text-align: center; width: 6%;">G&#252;n</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for issue in all_issues %}
+        <tr class="no-break">
+            <td style="text-align: center; color: #94a3b8;">{{ forloop.counter }}</td>
+            <td style="overflow: hidden;"><strong>{{ issue.title|truncatechars:30 }}</strong></td>
+            <td style="text-align: center;">
+                {% if issue.severity == 'CRITICAL' %}
+                    <span class="badge badge-red">Kritik</span>
+                {% elif issue.severity == 'HIGH' %}
+                    <span class="badge badge-orange">Y&#252;ksek</span>
+                {% elif issue.severity == 'MEDIUM' %}
+                    <span class="badge badge-yellow">Orta</span>
+                {% else %}
+                    <span class="badge badge-gray">D&#252;&#351;&#252;k</span>
+                {% endif %}
+            </td>
+            <td style="text-align: center;">
+                {% if issue.is_resolved %}
+                    <span class="badge badge-green">Tamamland&#305;</span>
+                {% elif issue.status == 'ESCALATED' %}
+                    <span class="badge badge-red">Eskalasyon</span>
+                {% elif issue.status == 'IN_PROGRESS' %}
+                    <span class="badge badge-blue">Devam Ediyor</span>
+                {% else %}
+                    <span class="badge badge-purple">Devam Ediyor</span>
+                {% endif %}
+            </td>
+            <td style="overflow: hidden;">
+                {{ issue.entity_name|truncatechars:18 }}
+                {% if issue.entity_code %}
+                    <span class="entity-code">({{ issue.entity_code }})</span>
+                {% endif %}
+            </td>
+            <td class="text-muted" style="overflow: hidden;">{{ issue.department_name|truncatechars:14 }}</td>
+            <td class="text-muted" style="overflow: hidden;">{{ issue.reported_by|truncatechars:14 }}</td>
+            <td style="text-align: center;" class="text-muted">{{ issue.created_at }}</td>
+            <td style="text-align: center;">
+                {% if issue.is_overdue %}
+                    <span class="overdue-indicator">{{ issue.due_date }}</span>
+                {% else %}
+                    <span class="text-muted">{{ issue.due_date }}</span>
+                {% endif %}
+            </td>
+            <td style="text-align: center;">
+                {% if issue.is_resolved %}
+                    <span class="days-open days-open-low">
+                        {{ issue.resolution_days }} <span class="resolved-indicator">&#10003;</span>
+                    </span>
+                {% else %}
+                    <span class="days-open {% if issue.days_open > 30 %}days-open-high{% elif issue.days_open > 14 %}days-open-medium{% else %}days-open-low{% endif %}">
+                        {{ issue.days_open }}
+                    </span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endif %}
+
+{% if issues_with_photos %}
+<div class="page-break"></div>
+<h1>Uygunsuzluk Foto&#287;raflar&#305;</h1>
+<p class="text-muted" style="margin-top: -4px; margin-bottom: 14px;">
+    D&#246;nem: {{ period }} &mdash; Foto&#287;rafl&#305; {{ issues_with_photos|length }} uygunsuzluk
+</p>
+
+<table style="table-layout: fixed; width: 100%; border-collapse: separate; border-spacing: 6px;">
+{% for item in issues_with_photos %}
+    {% if not forloop.counter|divisibleby:2 %}
+    <tr class="no-break">
+    {% endif %}
+        <td style="width: 50%; vertical-align: top; border: 1px solid #e2e8f0; padding: 10px 12px; background-color: #ffffff;">
+            <div class="photo-gallery-title">
+                {{ item.issue_number }}. {{ item.title|truncatechars:30 }}
+                &nbsp;
+                {% if item.severity == 'CRITICAL' %}
+                    <span class="badge badge-red">Kritik</span>
+                {% elif item.severity == 'HIGH' %}
+                    <span class="badge badge-orange">Y&#252;ksek</span>
+                {% elif item.severity == 'MEDIUM' %}
+                    <span class="badge badge-yellow">Orta</span>
+                {% else %}
+                    <span class="badge badge-gray">D&#252;&#351;&#252;k</span>
+                {% endif %}
+            </div>
+            <div class="photo-gallery-meta">
+                Varl&#305;k: {{ item.entity_name|truncatechars:20 }}
+                {% if item.entity_code %}
+                    <span class="entity-code">({{ item.entity_code }})</span>
+                {% endif %}
+            </div>
+            <table class="photo-gallery-grid" style="table-layout: fixed; width: 100%;">
+                <tr>
+                    {% for photo in item.photos %}
+                    <td style="width: 50%;">
+                        <img src="{{ photo }}" style="width: 100%; max-height: 140px; object-fit: contain;" />
+                    </td>
+                    {% if forloop.counter|divisibleby:2 and not forloop.last %}
+                </tr>
+                <tr>
+                    {% endif %}
+                    {% endfor %}
+                    {% if not item.photos|length|divisibleby:2 %}
+                    <td style="width: 50%;"></td>
+                    {% endif %}
+                </tr>
+            </table>
+        </td>
+    {% if forloop.counter|divisibleby:2 or forloop.last %}
+        {% if forloop.last and not forloop.counter|divisibleby:2 %}
+        <td style="width: 50%; border: none;"></td>
+        {% endif %}
+    </tr>
+    {% endif %}
+{% endfor %}
+</table>
+{% endif %}
+{% endblock %}
