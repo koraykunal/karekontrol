@@ -23,6 +23,10 @@ COPY . .
 ENV DJANGO_SETTINGS_MODULE=config.settings.production
 ENV DJANGO_ENV=production
 ENV SECRET_KEY=build-placeholder
+ENV ALLOWED_HOSTS=build
+ENV CORS_ALLOWED_ORIGINS=http://build
+ENV DB_NAME=build
+ENV DB_HOST=localhost
 
 RUN python manage.py collectstatic --noinput
 
