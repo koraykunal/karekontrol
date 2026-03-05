@@ -20,6 +20,8 @@ RUN pip install --no-cache-dir -r requirements/production.txt
 
 COPY . .
 
+RUN mkdir -p /app/logs
+
 ENV DJANGO_SETTINGS_MODULE=config.settings.production
 ENV DJANGO_ENV=production
 ENV SECRET_KEY=build-placeholder
