@@ -10,9 +10,9 @@ import { useEntityHistory } from '@/hooks/queries/use-entities'
 import { PROCEDURE_LOG_STATUS_LABELS, ProcedureLogStatus } from '@/lib/constants'
 
 const statusVariants: Record<ProcedureLogStatus, string> = {
-    in_progress: 'bg-blue-100 text-blue-700 border-blue-200',
-    completed: 'bg-emerald-100 text-emerald-700 border-emerald-200',
-    cancelled: 'bg-gray-100 text-gray-600 border-gray-200',
+    IN_PROGRESS: 'bg-blue-100 text-blue-700 border-blue-200',
+    COMPLETED: 'bg-emerald-100 text-emerald-700 border-emerald-200',
+    CANCELLED: 'bg-gray-100 text-gray-600 border-gray-200',
 }
 
 interface HistoryTabProps {

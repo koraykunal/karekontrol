@@ -25,11 +25,11 @@ const typeIconMap: Record<NotificationType, React.ComponentType<{ className?: st
     SYSTEM: Info,
 }
 
-const priorityColors = {
-    LOW: 'text-muted-foreground',
-    NORMAL: 'text-blue-600',
-    HIGH: 'text-orange-600',
-    URGENT: 'text-red-600',
+const priorityColors: Record<string, string> = {
+    low: 'text-muted-foreground',
+    normal: 'text-blue-600',
+    high: 'text-orange-600',
+    urgent: 'text-red-600',
 }
 
 interface NotificationItemProps {
