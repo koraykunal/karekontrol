@@ -53,7 +53,7 @@ COPY --from=builder /usr/local/lib/python3.13/site-packages /usr/local/lib/pytho
 COPY --from=builder /usr/local/bin /usr/local/bin
 COPY --from=builder /app /app
 
-RUN mkdir -p /app/media /app/logs && chown -R appuser:appuser /app
+RUN mkdir -p /app/media /app/logs && chmod +x /app/scripts/entrypoint.sh && chown -R appuser:appuser /app
 
 USER appuser
 
