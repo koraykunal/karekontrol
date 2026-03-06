@@ -1,6 +1,7 @@
 'use client'
 
 import { create } from 'zustand'
+import { persist } from 'zustand/middleware'
 import type { User } from '@/types'
 
 interface AuthState {
@@ -16,16 +17,27 @@ interface AuthActions {
     setHydrated: (value: boolean) => void
 }
 
-export const useAuthStore = create<AuthState & AuthActions>()((set) => ({
-    user: null,
-    isAuthenticated: false,
-    hydrated: true,
+export const useAuthStore = create<AuthState & AuthActions>()(
+    persist(
+        (set) => ({
+            user: null,
+            isAuthenticated: false,
+            hydrated: false,
 
-    setUser: (user) => set({ user, isAuthenticated: true }),
+            setUser: (user) => set({ user, isAuthenticated: true }),
 
-    setAuthenticated: () => set({ isAuthenticated: true }),
+            setAuthenticated: () => set({ isAuthenticated: true }),
 
-    logout: () => set({ user: null, isAuthenticated: false }),
+            logout: () => set({ user: null, isAuthenticated: false }),
 
-    setHydrated: (value) => set({ hydrated: value }),
-}))
+            setHydrated: (value) => set({ hydrated: value }),
+        }),
+        {
+            name: 'auth-storage',
+            partialize: (state) => ({ isAuthenticated: state.isAuthenticated }),
+            onRehydrateStorage: () => (state) => {
+                state?.setHydrated(true)
+            },
+        },
+    ),
+)
