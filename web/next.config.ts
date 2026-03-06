@@ -26,7 +26,7 @@ const nextConfig: NextConfig = {
           },
           {
             key: "Content-Security-Policy",
-            value: `default-src 'self'; script-src 'self'${isDev ? " 'unsafe-inline' 'unsafe-eval'" : ""}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ${imgSrcExtra}; connect-src 'self'; font-src 'self'; frame-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'`,
+            value: `default-src 'self'; script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ""}; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: ${imgSrcExtra}; connect-src 'self'; font-src 'self'; frame-src 'self' blob:; frame-ancestors 'none'; base-uri 'self'; form-action 'self'`,
           },
           {
             key: "Strict-Transport-Security",
