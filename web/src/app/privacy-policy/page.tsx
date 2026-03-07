@@ -37,7 +37,7 @@ export default function PrivacyPolicyPage() {
                             Gizlilik Politikası
                         </div>
                         <h1 className="text-3xl font-bold tracking-tight md:text-4xl">
-                            Gizlilik Politikası
+                            KareKontrol Gizlilik Politikası
                         </h1>
                         <p className="text-muted-foreground">
                             Son Güncelleme: 05.03.2026
@@ -47,13 +47,12 @@ export default function PrivacyPolicyPage() {
             </section>
 
             <section className="mx-auto max-w-5xl px-6 py-12 md:py-16">
-                <div className="prose prose-neutral dark:prose-invert max-w-3xl space-y-10">
+                <div className="max-w-3xl space-y-10">
 
                     <div className="space-y-3">
                         <h2 className="text-xl font-bold tracking-tight">1. Veri Sorumlusu</h2>
                         <p className="leading-7 text-muted-foreground">
-                            Bu uygulama KareKontrol tarafından işletilmektedir. Kişisel verilerinizin
-                            güvenliği bizim için önceliklidir.
+                            Bu uygulama KareKontrol tarafından işletilmektedir. Kişisel verilerinizin güvenliği bizim için önceliklidir.
                         </p>
                         <ul className="list-disc pl-6 text-muted-foreground space-y-1">
                             <li>İletişim: <a href="mailto:karekontrol@gmail.com" className="text-primary hover:underline">karekontrol@gmail.com</a></li>
@@ -66,7 +65,7 @@ export default function PrivacyPolicyPage() {
                             Uygulamamızı kullanırken aşağıdaki veriler toplanabilir:
                         </p>
                         <ul className="list-disc pl-6 text-muted-foreground space-y-1">
-                            <li><strong>Kimlik Bilgileri:</strong> Ad, soyad (kayıt işlemi sırasında)</li>
+                            <li><strong>Kimlik Bilgileri:</strong> Ad, soyad (eğer kayıt varsa)</li>
                             <li><strong>İletişim Bilgileri:</strong> E-posta adresi, telefon numarası</li>
                             <li><strong>Kullanım Verileri:</strong> Uygulama içi etkileşimler, hata raporları</li>
                             <li><strong>Cihaz Bilgileri:</strong> Cihaz modeli, işletim sistemi sürümü</li>
@@ -79,24 +78,18 @@ export default function PrivacyPolicyPage() {
                             Toplanan veriler aşağıdaki amaçlarla kullanılır:
                         </p>
                         <ul className="list-disc pl-6 text-muted-foreground space-y-1">
-                            <li>Uygulamanın temel işlevlerini yerine getirmek</li>
-                            <li>Kullanıcı deneyimini iyileştirmek ve hataları gidermek</li>
-                            <li>Üyelik işlemlerini yönetmek</li>
-                            <li>Yasal yükümlülüklere uyum sağlamak</li>
+                            <li>Uygulamanın temel işlevlerini yerine getirmek.</li>
+                            <li>Kullanıcı deneyimini iyileştirmek ve hataları gidermek.</li>
+                            <li>Üyelik işlemlerini yönetmek.</li>
+                            <li>Yasal yükümlülüklere uyum sağlamak.</li>
                         </ul>
                     </div>
 
                     <div className="space-y-3">
                         <h2 className="text-xl font-bold tracking-tight">4. Verilerin Üçüncü Taraflarla Paylaşımı</h2>
                         <p className="leading-7 text-muted-foreground">
-                            Verileriniz, uygulamanın çalışması için gerekli olan hizmet sağlayıcılar
-                            dışında üçüncü taraflarla paylaşılmaz. Hizmet sağlayıcılarımız:
+                            Verileriniz, uygulamanın çalışması için gerekli olan hizmet sağlayıcılar dışında üçüncü taraflarla paylaşılmaz.
                         </p>
-                        <ul className="list-disc pl-6 text-muted-foreground space-y-1">
-                            <li><strong>Amazon Web Services (AWS):</strong> Veri depolama ve sunucu altyapısı</li>
-                            <li><strong>Sentry:</strong> Hata izleme ve performans takibi</li>
-                            <li><strong>Expo:</strong> Uygulama güncelleme hizmetleri</li>
-                        </ul>
                     </div>
 
                     <div className="space-y-3">
@@ -156,6 +149,7 @@ export default function PrivacyPolicyPage() {
                             </a>
                         </p>
                     </div>
+
                 </div>
             </section>
 
