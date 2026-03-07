@@ -33,6 +33,17 @@ export function handleApiError(error: unknown): ApiError {
       };
     }
 
+    // DRF non_field_errors format (fallback)
+    if (data?.non_field_errors) {
+      const msg = Array.isArray(data.non_field_errors)
+        ? data.non_field_errors[0]
+        : data.non_field_errors;
+      return {
+        message: translateErrorMessage(String(msg)),
+        statusCode: status,
+      };
+    }
+
     // Direct view response format: { message, errors }
     if (data?.message) {
       return {
@@ -109,6 +120,9 @@ export function handleApiError(error: unknown): ApiError {
 function translateErrorMessage(message: string): string {
   const translations: Record<string, string> = {
     'Invalid credentials': 'E-posta veya şifre hatalı.',
+    'Invalid email or password': 'E-posta veya şifre hatalı.',
+    'User account is disabled': 'Kullanıcı hesabı devre dışı.',
+    'Email and password are required': 'E-posta ve şifre gereklidir.',
     'User not found': 'Kullanıcı bulunamadı.',
     'Email already exists': 'Bu e-posta adresi zaten kullanılıyor.',
     'Invalid email': 'Geçersiz e-posta adresi.',

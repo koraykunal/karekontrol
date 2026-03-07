@@ -7,6 +7,7 @@ import { Text } from '@/src/components/common/Text';
 import { Colors } from '@/src/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { uploadService } from '@/src/api/services/upload.service';
+import { handleApiError } from '@/src/api/client/error-handler';
 import { MediaCaptureModal } from '@/src/features/procedures/components/media/MediaCaptureModal';
 import type { CapturedMedia } from '@/src/api/types/media.types';
 
@@ -104,9 +105,9 @@ const StepCardInternal: React.FC<StepCardProps> = ({
             } else {
                 throw new Error('Sunucu "başarısız" yanıtı döndü');
             }
-        } catch (error: any) {
-            const msg = error.response?.data?.message || error.message || 'Bağlantı hatası';
-            Alert.alert('Yükleme Hatası', `Medya yüklenemedi:\n${msg}`);
+        } catch (error) {
+            const apiError = handleApiError(error);
+            Alert.alert('Yükleme Hatası', `Medya yüklenemedi:\n${apiError.message}`);
         } finally {
             state.setIsUploading(false);
         }

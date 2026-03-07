@@ -72,10 +72,26 @@ def custom_exception_handler(exc, context):
     if response is not None:
         error_code = getattr(exc, 'default_code', 'error')
         error_message = str(exc)
+        error_details = {}
 
         if hasattr(exc, 'detail'):
             if isinstance(exc.detail, dict):
-                error_message = exc.detail.get('detail', str(exc.detail))
+                if 'non_field_errors' in exc.detail:
+                    items = exc.detail['non_field_errors']
+                    error_message = ', '.join(str(item) for item in items)
+                elif 'detail' in exc.detail:
+                    error_message = str(exc.detail['detail'])
+                else:
+                    first_value = next(iter(exc.detail.values()), None)
+                    if first_value:
+                        if isinstance(first_value, list):
+                            error_message = ', '.join(str(item) for item in first_value)
+                        else:
+                            error_message = str(first_value)
+                error_details = {
+                    k: [str(e) for e in v] if isinstance(v, list) else [str(v)]
+                    for k, v in exc.detail.items()
+                }
             elif isinstance(exc.detail, list):
                 error_message = ', '.join(str(item) for item in exc.detail)
             else:
@@ -86,7 +102,7 @@ def custom_exception_handler(exc, context):
             'error': {
                 'code': error_code,
                 'message': error_message,
-                'details': response.data if isinstance(response.data, dict) else {}
+                'details': error_details,
             },
             'timestamp': timezone.now().isoformat()
         }

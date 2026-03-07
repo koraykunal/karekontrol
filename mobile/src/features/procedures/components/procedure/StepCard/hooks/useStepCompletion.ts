@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Alert } from 'react-native';
 import type { StepLog } from '@/src/api/types/procedure.types';
 import type { CompletionStatus, IssueSeverity } from '../types';
+import { handleApiError } from '@/src/api/client/error-handler';
 
 interface UseStepCompletionProps {
     step: StepLog;
@@ -47,9 +48,9 @@ export function useStepCompletion({ step, procedureLogId, onStepCompleted }: Use
 
             // Collapse on success
             setIsExpanded(false);
-        } catch (error: any) {
-            const msg = error?.response?.data?.detail || error?.message || 'İşlem kaydedilemedi.';
-            Alert.alert('Hata', msg);
+        } catch (error) {
+            const apiError = handleApiError(error);
+            Alert.alert('Hata', apiError.message);
         } finally {
             setIsPending(false);
         }
